@@ -19,8 +19,6 @@ This is a GitHub workflow Action that enforces PR authors to first open an issue
 | `pr_autoclose_message`      | Built-in message         | Comment posted on the PR on auto-close/rejection.                                                           |
 | `exclude_past_contributors` | `false`                  | Skip checks for users who have previously contributed commits to the repo.                                  |
 | `github_token`              | `${{ github.token }}`    | GitHub token for API calls.                                                                                 |
-| `github_api_url`            | `https://api.github.com` | GitHub API base URL. Useful for local testing with a mock server.                                           |
-| `force_validate_owner_prs`  | `false`                  | Force validation for owner-authored PRs. Intended for testing only.                                         |
 | `min_diff_files`            | `0`                      | Min number of changed files in the PR to apply checks. 0 always checks.                                     |
 | `min_diff_lines`            | `0`                      | Min number of changed lines in the PR to apply checks. 0 always checks.                                     |
 
@@ -48,10 +46,6 @@ jobs:
           # approval_str: ''
           # reference_str: ''
           # pr_autoclose_message: ''
-          # exclude_past_contributors: ''
-          # github_token: ''
-          # github_api_url: ''
-          # force_validate_owner_prs: ''
           # min_diff_files: ''
           # min_diff_lines: ''
 ```

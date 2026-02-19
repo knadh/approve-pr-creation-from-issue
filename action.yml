@@ -27,14 +27,6 @@ inputs:
     description: "GitHub token for API calls."
     required: false
     default: ${{ github.token }}
-  github_api_url:
-    description: "GitHub API base URL. Useful for local tests with a mock server."
-    required: false
-    default: "https://api.github.com"
-  force_validate_owner_prs:
-    description: "Force validation for owner-authored PRs. Intended for local/e2e testing."
-    required: false
-    default: "false"
   min_diff_files:
     description: "Min number of changed files in the PR to apply checks. 0 always checks."
     required: false
