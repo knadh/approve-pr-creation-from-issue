@@ -14,8 +14,8 @@ This is a GitHub workflow Action that enforces PR authors to first open an issue
 
 | Input                       | Default                  | Description                                                                                                 |
 | --------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `approval_str`              | `{user} PR approved`     | Approval comment string to look for in the issue comment. Must include `{user}`.                            |
-| `reference_str`             | `Approval: {url}`        | Reference string in PR body pointing to the approval comment. Must include exactly one `{url}` placeholder. |
+| `approval_str`              | `/pr-welcome {user}`     | Approval comment string to look for in the issue comment. Must include `{user}`.                            |
+| `reference_str`             | `/pr-clearance {url}`    | Reference string in PR body pointing to the approval comment. Must include exactly one `{url}` placeholder. |
 | `pr_autoclose_message`      | Built-in message         | Comment posted on the PR on auto-close/rejection.                                                           |
 | `exclude_past_contributors` | `false`                  | Skip checks for users who have previously contributed commits to the repo.                                  |
 | `github_token`              | `${{ github.token }}`    | GitHub token for API calls.                                                                                 |

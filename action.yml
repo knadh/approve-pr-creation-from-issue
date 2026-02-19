@@ -1,5 +1,5 @@
-name: "Approve PR from Issue"
-description: "Enforces PR authors to open an issue, discuss, and get explicit approval from repo maintainers via an issue comment before opening a PR."
+name: "Approve PR creation from Issue"
+description: "Mandate potential PR contributors to open an issue, discuss, and get explicit approval/greenlight from repo maintainers via an issue comment before opening a PR."
 author: "knadh"
 
 branding:
@@ -10,11 +10,11 @@ inputs:
   approval_str:
     description: "Approval comment string to look for in the issue comment. Must include `{user}` which is substituted with the PR author's username."
     required: false
-    default: "{user} PR approved"
+    default: "/pr-welcome {user}"
   reference_str:
     description: "Reference string in PR body pointing to the approval comment. Must include exactly one `{url}` placeholder."
     required: false
-    default: "Approval: {url}"
+    default: "/pr-clearance {url}"
   pr_autoclose_message:
     description: "Comment posted on the PR on auto-close/rejection."
     required: false

@@ -6,10 +6,10 @@ import { fileURLToPath } from 'node:url';
 const GITHUB_API_VERSION = '2022-11-28';
 const RE_COMMENT_URL = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)#issuecomment-(\d+)$/;
 const DEFAULT_CONFIG = {
-  approvalStr: '{user} PR approved',
-  referenceStr: 'Approval: {url}',
+  approvalStr: '/pr-welcome {user}',
+  referenceStr: '/pr-clearance {url}',
   autocloseMsg:
-    'This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get approval from the maintainer, and reference the approval comment URL in your PR body in the format `Approval: {url}`.',
+    'This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get clearance from the maintainer, and reference the approval comment URL in your PR body in the format `/pr-clearance {url}`.',
   excludeContributors: false,
 };
 const ALLOWED_PERMISSIONS = new Set(['write', 'admin']);
