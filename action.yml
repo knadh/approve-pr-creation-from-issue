@@ -37,5 +37,5 @@ inputs:
     default: "0"
 
 runs:
-  using: "node20"
-  main: "main.js"
+  using: "node24"
+  main: "index.js"
