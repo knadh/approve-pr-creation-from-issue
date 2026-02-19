@@ -18,7 +18,7 @@ inputs:
   pr_autoclose_message:
     description: "Comment posted on the PR on auto-close/rejection."
     required: false
-    default: "This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get approval from the maintainer, and reference the approval comment URL in your PR body in the format `Approval: {url}`."
+    default: "This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get clearance from the maintainer, and reference the approval comment URL in your PR body in the format `/pr-clearance {url}`."
   exclude_past_contributors:
     description: "Skip checks for users who have previously contributed commits to the repo."
     required: false

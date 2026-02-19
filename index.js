@@ -5,13 +5,6 @@ import { fileURLToPath } from 'node:url';
 
 const GITHUB_API_VERSION = '2022-11-28';
 const RE_COMMENT_URL = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)#issuecomment-(\d+)$/;
-const DEFAULT_CONFIG = {
-  approvalStr: '/pr-welcome {user}',
-  referenceStr: '/pr-clearance {url}',
-  autocloseMsg:
-    'This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get clearance from the maintainer, and reference the approval comment URL in your PR body in the format `/pr-clearance {url}`.',
-  excludeContributors: false,
-};
 const ALLOWED_PERMISSIONS = new Set(['write', 'admin']);
 
 function escapeRegExp(s) {
@@ -279,9 +272,9 @@ async function run() {
   }
 
   const cfg = {
-    approvalStr: core.getInput('approval_str') || DEFAULT_CONFIG.approvalStr,
-    referenceStr: core.getInput('reference_str') || DEFAULT_CONFIG.referenceStr,
-    autocloseMsg: core.getInput('pr_autoclose_message') || DEFAULT_CONFIG.autocloseMsg,
+    approvalStr: core.getInput('approval_str'),
+    referenceStr: core.getInput('reference_str'),
+    autocloseMsg: core.getInput('pr_autoclose_message'),
     excludeContribs: core.getInput('exclude_past_contributors') === 'true',
   };
   if (!validateConfig(cfg)) return;
