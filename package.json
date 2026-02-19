@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "dist": "ncc build index.js -o dist"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.4"
+  }
+}
