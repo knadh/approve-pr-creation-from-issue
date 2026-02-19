@@ -1,5 +1,5 @@
 name: "Approve PR creation from Issue"
-description: "Mandate potential PR contributors to open an issue, discuss, and get explicit approval/greenlight from repo maintainers via an issue comment before opening a PR."
+description: "Mandate PR creation to require an explicit approval comment from a repo maintainer on an Issue discussion"
 author: "knadh"
 
 branding:
