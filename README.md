@@ -24,6 +24,8 @@ This is a GitHub workflow Action that enforces PR authors to first open an issue
 | `min_diff_files`            | `0`                      | Min number of changed files in the PR to apply checks. 0 always checks.                                     |
 | `min_diff_lines`            | `0`                      | Min number of changed lines in the PR to apply checks. 0 always checks.                                     |
 
+See the default values in [actions.yml](https://github.com/knadh/approve-pr-creation-from-issue/blob/master/action.yml)
+
 ## Usage
 
 ```yaml
