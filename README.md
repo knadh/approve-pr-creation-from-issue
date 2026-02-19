@@ -1,4 +1,4 @@
-# Approve PR from GitHub Issue
+# Approve PR creation from GitHub Issue
 
 This is a GitHub workflow Action that enforces PR authors to first open an issue, discuss, and get explicit approval from repo maintainers via an issue comment before opening a PR. The PR must include a reference to that approval comment in the body, otherwise the PR is auto-closed. The goal is to reduce the burden on repo maintainers by preventing unsolicited or undesirable PRs.
 
