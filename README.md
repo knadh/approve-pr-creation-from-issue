@@ -5,8 +5,8 @@ This is a GitHub workflow Action that enforces PR authors to first open an issue
 ## How it works
 
 1. A potential contributor opens an Issue proposing changes. A discussion happens.
-2. A maintainer (with write/admin access) allows creation of a PR by commenting on the issue (e.g., `@contributor PR approved`).
-3. The contributor opens a PR and includes the approval comment URL in the PR body (e.g., `Approval: https://github.com/owner/repo/issues/42#issuecomment-123456`).
+2. A maintainer (with write/admin access) allows creation of a PR by commenting on the issue (e.g., `/pr-welcome @contributor`).
+3. The contributor opens a PR and includes the approval comment URL in the PR body (e.g., `/pr-clearance https://github.com/owner/repo/issues/42#issuecomment-123456`).
 4. The action validates the approval. Any PR that doesn't link to a valid approval is auto-closed.
 
 
