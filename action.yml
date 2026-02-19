@@ -1,0 +1,49 @@
+name: "Approve PR from Issue"
+description: "Enforces PR authors to open an issue, discuss, and get explicit approval from repo maintainers via an issue comment before opening a PR."
+author: "knadh"
+
+branding:
+  icon: "check-circle"
+  color: "green"
+
+inputs:
+  approval_str:
+    description: "Approval comment string to look for in the issue comment. Must include `{user}` which is substituted with the PR author's username."
+    required: false
+    default: "{user} PR approved"
+  reference_str:
+    description: "Reference string in PR body pointing to the approval comment. Must include exactly one `{url}` placeholder."
+    required: false
+    default: "Approval: {url}"
+  pr_autoclose_message:
+    description: "Comment posted on the PR on auto-close/rejection."
+    required: false
+    default: "This PR was automatically closed because the reference to approval (issue) could not be found. Please open an issue first, get approval from the maintainer, and reference the approval comment URL in your PR body in the format `Approval: {url}`."
+  exclude_past_contributors:
+    description: "Skip checks for users who have previously contributed commits to the repo."
+    required: false
+    default: "false"
+  github_token:
+    description: "GitHub token for API calls."
+    required: false
+    default: ${{ github.token }}
+  github_api_url:
+    description: "GitHub API base URL. Useful for local tests with a mock server."
+    required: false
+    default: "https://api.github.com"
+  force_validate_owner_prs:
+    description: "Force validation for owner-authored PRs. Intended for local/e2e testing."
+    required: false
+    default: "false"
+  min_diff_files:
+    description: "Min number of changed files in the PR to apply checks. 0 always checks."
+    required: false
+    default: "0"
+  min_diff_lines:
+    description: "Min number of changed lines in the PR to apply checks. 0 always checks."
+    required: false
+    default: "0"
+
+runs:
+  using: "node20"
+  main: "main.js"

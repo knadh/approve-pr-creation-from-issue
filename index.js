@@ -265,6 +265,19 @@ async function run() {
     return;
   }
 
+  // Skip checks for small PRs based on diff thresholds.
+  const minDiffFiles = parseInt(core.getInput('min_diff_files'), 10) || 0;
+  const minDiffLines = parseInt(core.getInput('min_diff_lines'), 10) || 0;
+
+  if (minDiffFiles > 0 && (pr.changed_files ?? 0) <= minDiffFiles) {
+    core.info(`PR changes ${pr.changed_files ?? 0} file(s), which is < min_diff_files ${minDiffFiles}. Skipping checks.`);
+    return;
+  }
+  if (minDiffLines > 0 && ((pr.additions ?? 0) + (pr.deletions ?? 0)) <= minDiffLines) {
+    core.info(`PR changes ${(pr.additions ?? 0) + (pr.deletions ?? 0)} line(s), which is < min_diff_lines ${minDiffLines}. Skipping checks.`);
+    return;
+  }
+
   const cfg = {
     approvalStr: core.getInput('approval_str') || DEFAULT_CONFIG.approvalStr,
     referenceStr: core.getInput('reference_str') || DEFAULT_CONFIG.referenceStr,
