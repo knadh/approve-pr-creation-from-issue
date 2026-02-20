@@ -252,7 +252,7 @@ async function run() {
   const token = core.getInput('github_token');
   if (!token) return core.setFailed('github_token input is required.');
 
-  // If the repo owner and PR user are the same, shortcuit and just skip everything.
+  // If the repo owner and PR user are the same, shortcircuit and just skip everything.
   if (pr.base.repo.owner.login.toLowerCase() === pr.user.login.toLowerCase()) {
     core.info('PR author is the same as the repo owner. Skipping approval checks.');
     return;
