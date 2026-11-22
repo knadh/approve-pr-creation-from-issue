@@ -1,6 +1,6 @@
 import core from '@actions/core';
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { posix, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const GITHUB_API_VERSION = '2022-11-28';
@@ -115,11 +115,11 @@ class PRApproval {
   }
 
   // Close PR with a reason comment and fail the action.
-  async _closePR(reason) {
+  async _closePR(reason, message = this.cfg.autocloseMsg) {
     core.info(reason);
     try {
       const res = await this._send('POST', `${this.api}/issues/${this.prNumber}/comments`, {
-        body: `${this.cfg.autocloseMsg}\n\n**Reason:** ${reason}`,
+        body: `${message}\n\n**Reason:** ${reason}`,
       });
       if (!res.ok) {
         core.info(`errror posting auto-close comment (status ${res.status}).`);
@@ -153,6 +153,48 @@ class PRApproval {
       }
       page++;
     }
+  }
+
+  // Enforce the allowlist before contributor and diff-size approval exemptions.
+  async checkPaths(expectedFiles) {
+    let count = 0;
+    for (let page = 1; page <= 30; page++) {
+      const { status, data, headers } = await this._get(
+        `${this.api}/pulls/${this.prNumber}/files?per_page=100&page=${page}`
+      );
+
+      if (status !== 200 || !Array.isArray(data)) {
+        throw new Error(`error fetching PR files (status ${status}).`);
+      }
+
+      for (const file of data) {
+        if (typeof file.filename !== 'string' || !file.filename ||
+          (file.status === 'renamed' && typeof file.previous_filename !== 'string')) {
+          throw new Error('GitHub returned an invalid PR file.');
+        }
+
+        const paths = [file.filename];
+        if (file.previous_filename) paths.push(file.previous_filename);
+        for (const path of paths) {
+          if (!this.cfg.allowedPaths.some(pattern => posix.matchesGlob(path, pattern))) {
+            const reason = `Changed path ${JSON.stringify(path)} is outside allowed_paths.`;
+            await this._closePR(reason, 'This PR was automatically closed because it changes paths outside the configured allowlist.');
+            core.setFailed(reason);
+            return false;
+          }
+        }
+      }
+
+      count += data.length;
+      if (!(headers.get('link') || '').includes('rel="next"')) {
+        if (!count || (Number.isInteger(expectedFiles) && count !== expectedFiles)) {
+          throw new Error('Could not verify the complete list of changed PR files.');
+        }
+
+        return true;
+      }
+    }
+    throw new Error('Could not verify all PR files: GitHub limits the file list to 3000 files.');
   }
 
   async check() {
@@ -252,9 +294,40 @@ async function run() {
   const token = core.getInput('github_token');
   if (!token) return core.setFailed('github_token input is required.');
 
-  // If the repo owner and PR user are the same, shortcuit and just skip everything.
+  // Repository owners are exempt from both path restrictions and approval checks.
   if (pr.base.repo.owner.login.toLowerCase() === pr.user.login.toLowerCase()) {
-    core.info('PR author is the same as the repo owner. Skipping approval checks.');
+    core.info('PR author is the same as the repo owner. Skipping path and approval checks.');
+    return;
+  }
+
+  const cfg = {
+    approvalStr: core.getInput('approval_str'),
+    referenceStr: core.getInput('reference_str'),
+    autocloseMsg: core.getInput('pr_autoclose_message'),
+    excludeContribs: core.getInput('exclude_past_contributors') === 'true',
+    allowedPaths: core.getInput('allowed_paths').split(/\r?\n/).map(s => s.trim()).filter(Boolean),
+  };
+
+  const checker = new PRApproval({
+    token,
+    owner: pr.base.repo.owner.login.toLowerCase(),
+    repo: pr.base.repo.name.toLowerCase(),
+    prNumber: pr.number,
+    prUser: pr.user.login.toLowerCase(),
+    prBody: pr.body || '',
+    cfg,
+  });
+
+  if (cfg.allowedPaths.length) {
+    try {
+      if (!await checker.checkPaths(pr.changed_files)) return;
+    } catch (err) {
+      return core.setFailed(`error checking allowed paths: ${err.message}`);
+    }
+  }
+
+  if (core.getInput('require_approval') === 'false') {
+    core.info('require_approval is disabled. Skipping approval checks.');
     return;
   }
 
@@ -271,23 +344,7 @@ async function run() {
     return;
   }
 
-  const cfg = {
-    approvalStr: core.getInput('approval_str'),
-    referenceStr: core.getInput('reference_str'),
-    autocloseMsg: core.getInput('pr_autoclose_message'),
-    excludeContribs: core.getInput('exclude_past_contributors') === 'true',
-  };
   if (!validateConfig(cfg)) return;
-
-  const checker = new PRApproval({
-    token,
-    owner: pr.base.repo.owner.login.toLowerCase(),
-    repo: pr.base.repo.name.toLowerCase(),
-    prNumber: pr.number,
-    prUser: pr.user.login.toLowerCase(),
-    prBody: pr.body || '',
-    cfg,
-  });
 
   await checker.check();
 }

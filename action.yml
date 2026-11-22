@@ -7,6 +7,14 @@ branding:
   color: "green"
 
 inputs:
+  allowed_paths:
+    description: "File paths or globs relative to the root (one per line) to allow. If empty, all paths are allowed. Except for repository owners, any changed path outside this list closes the PR immediately without proceeding to the approval flow."
+    required: false
+    default: ""
+  require_approval:
+    description: "Require issue approval after path checks pass. Repo owners are exempt from all checks; contributor and diff-size exemptions apply only to approval checks."
+    required: false
+    default: "true"
   approval_str:
     description: "Approval comment string to look for in the issue comment. Must include `{user}` which is substituted with the PR author's username."
     required: false
