@@ -178,7 +178,7 @@ class PRApproval {
         for (const path of paths) {
           if (!this.cfg.allowedPaths.some(pattern => posix.matchesGlob(path, pattern))) {
             const reason = `Changed path ${JSON.stringify(path)} is outside allowed_paths.`;
-            await this._closePR(reason, 'This PR was automatically closed because it changes paths outside the configured allowlist.');
+            await this._closePR(reason);
             core.setFailed(reason);
             return false;
           }
